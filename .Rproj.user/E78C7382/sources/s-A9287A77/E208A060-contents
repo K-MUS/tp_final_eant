@@ -1,0 +1,47 @@
+#------------------------------------------------------------
+# EDA - Correlation
+#------------------------------------------------------------
+box_eda_corr <- tabPanel("Correlation", 
+                  fluidRow(                         
+                         box(
+                           title = "Correlation Matrix", width = 8, status = "warning", solidHeader = TRUE,
+                           plotOutput("eda_corr_plot", click = "eda_corr_plot_click", height = "600px"),
+                           
+                         ),
+                         box(
+                           title = "Correlation Detail", width = 4, status = "warning", solidHeader = TRUE,
+                           "Select a cell from the Correlation Matrix", br(), "More box content",
+                           #verbatimTextOutput("corr_info"),
+                           plotOutput("eda_corr_click_info", height="280px")
+                         )
+                  )
+)
+
+#------------------------------------------------------------
+# Intro
+#------------------------------------------------------------
+tab_intro <- tabItem(tabName = "intro",
+                     h2("Intro")
+)
+
+#------------------------------------------------------------
+# EDA
+#------------------------------------------------------------
+tab_eda <- tabItem(tabName = "eda",
+                   tabBox(
+                     title = "EDA - Exploratory Data Analysis",
+                     # The id lets us use input$box_eda on the server to find the current tab
+                     id = "box_eda", height = "100%", width = "100%",
+                     box_eda_corr,
+                     tabPanel("Tab2", DT::dataTableOutput("original_datos") )
+                   )
+)
+
+#------------------------------------------------------------
+# Datos
+#------------------------------------------------------------
+tab_datos <- tabItem(tabName = "datos",
+                   h2("Datos"),
+                   DT::dataTableOutput("original_datos2")
+)
+
