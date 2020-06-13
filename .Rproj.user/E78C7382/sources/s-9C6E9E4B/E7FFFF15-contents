@@ -154,9 +154,10 @@ tab_predict <- tabItem(tabName = "predict",
                            sliderInput("i_age", "Age?", min = 14, max = 100, value = 38),                         
                            #travel
                            selectInput("i_travel", "Travel Frequency", 
-                                       choices = list("Non-Travel" = "Non-Travel", 
-                                                      "Rarely" = "Travel_Rarely", 
-                                                      "Frequently" = "Travel_Frequently"), 
+                                       choices = as.list(levels(train$BusinessTravel)),
+                                       # choices = list("Non-Travel" = "Non-Travel", 
+                                       #                "Rarely" = "Travel_Rarely", 
+                                       #                "Frequently" = "Travel_Frequently"), 
                                        selected = 1),
                            #monthlyIncome
                            sliderInput("i_monthly_income", "Monthly Income", min = 1000, max = 25000, value = 15000),

@@ -1,0 +1,32 @@
+{
+    "id": "F95E9D34",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1592009845408.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "structure(list(Age = 38L, BusinessTravel = 1L, Department = 1L,      DistanceFromHome = 1L, Education = 3L, EnvironmentSatisfaction = 2L,      Gender = 1L, JobRole = 1L, JobSatisfaction = 2L, MonthlyIncome = 15000L,      NumCompaniesWorked = 2L, OverTime = 1L, StockOptionLevel = 1L,      TotalWorkingYears = 18L, TrainingTimesLastYear = 2L, YearsAtCompany = 6L,      YearsInCurrentRole = 2L, YearsWithCurrManager = 2L), class = \"data.frame\", row.names = c(NA,  -1L))",
+        "caption": "title",
+        "totalObservations": 1,
+        "displayedObservations": 1,
+        "variables": 18,
+        "cacheKey": "2F6EE0C4",
+        "object": "",
+        "environment": "_rs_no_env",
+        "contentUrl": "grid_resource/gridviewer.html?env=_rs_no_env&obj=&cache_key=2F6EE0C4&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 2318562541288,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592009845408,
+    "read_only": false,
+    "read_only_alternatives": []
+}

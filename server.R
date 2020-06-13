@@ -237,56 +237,127 @@ SERVER <- shinyServer(function(input, output) {
 #------------------------------------------------------------
 # Predict
 #------------------------------------------------------------
-    output$PredictBox <- renderValueBox({
-        valueBox(
-            case_predict()$Age, "test", icon = icon("thumbs-up", lib = "glyphicon"),
-            color = "yellow"
-        )
+    #v = reactiveValues(df_pred = NULL)
+    
+    pred_case <- reactive({
+        Age                   = as.integer(input$i_age)
+        BusinessTravel        = as.factor(input$i_travel)
+        Department            = as.factor(input$i_department)
+        DistanceFromHome      = as.integer(input$i_distance)
+        Education             = as.integer(input$i_education)
+        EnvironmentSatisfaction = as.integer(input$i_env_satisfaction)
+        Gender                = as.factor(input$i_gender)
+        JobRole               = as.factor(input$i_role)
+        JobSatisfaction       = as.integer(input$i_job_satisfaction)
+        MonthlyIncome         = as.integer(input$i_monthly_income)
+        NumCompaniesWorked    = as.integer(input$i_companyworked)
+        OverTime              = as.factor(input$i_overtime)
+        StockOptionLevel      = as.integer(input$i_stock)
+        TotalWorkingYears     = as.integer(input$i_totalyworked)
+        TrainingTimesLastYear = as.integer(input$i_training)
+        YearsAtCompany        = as.integer(input$i_years_company)
+        YearsInCurrentRole    = as.integer(input$i_years_role)
+        YearsWithCurrManager  = as.integer(input$i_years_manager)
+        
+        str(BusinessTravel)
+         
+        test <- data.frame(Age,               
+                      BusinessTravel,
+                      Department,            
+                      DistanceFromHome,
+                      Education,     
+                      EnvironmentSatisfaction,
+                      Gender,
+                      JobRole,   
+                      JobSatisfaction,
+                      MonthlyIncome,
+                      NumCompaniesWorked,
+                      OverTime,     
+                      StockOptionLevel,
+                      TotalWorkingYears,     
+                      TrainingTimesLastYear,
+                      YearsAtCompany,
+                      YearsInCurrentRole,
+                      YearsWithCurrManager)
+
+        #test <- as.data.frame(test)
+        # test$BusinessTravel = as.factor(test$BusinessTravel)
+        test
+    })
+    
+    pred_result_prob <-  eventReactive(input$predict, {
+        # values <- reactiveValues(Age                   = input$i_age,
+        #                          BusinessTravel        = input$i_travel,
+        #                          Department            = input$i_department,
+        #                          DistanceFromHome      = input$i_distance,
+        #                          Education             = input$i_education,
+        #                          EnvironmentSatisfaction = input$i_env_satisfaction,
+        #                          Gender                = input$i_gender,
+        #                          JobRole               = input$i_role,
+        #                          MonthlyIncome         = input$i_monthly_income,
+        #                          NumCompanyWorked      = input$i_companyworked,
+        #                          OverTime              = input$i_overtime,
+        #                          StockOptionLevel      = input$i_stock,
+        #                          TotalWorkingYears     = input$i_totalyworked,
+        #                          TrainingTimesLastYear = input$i_training,
+        #                          YearsAtCompany        = input$i_years_company,
+        #                          YearsInCurrentRole    = input$i_years_role,
+        #                          YearsWithCurrManager  = input$i_years_manager)
+
+        pred <- predict(model, newdata = pred_case(), type = "class")
     })
 
-    case_predict <- eventReactive(input$predict, {
-        values <- reactiveValues(Age                   = input$i_age,
-                                 BusinessTravel        = input$i_travel,
-                                 Department            = input$i_department,
-                                 DistanceFromHome      = input$i_distance,
-                                 Education             = input$i_education,
-                                 EnvironmentSatisfaction = input$i_env_satisfaction,
-                                 Gender                = input$i_gender,
-                                 JobRole               = input$i_role,
-                                 MonthlyIncome         = input$i_monthly_income,
-                                 NumCompanyWorked      = input$i_companyworked,
-                                 OverTime              = input$i_overtime,
-                                 StockOptionLevel      = input$i_stock,
-                                 TotalWorkingYears     = input$i_totalyworked,
-                                 TrainingTimesLastYear = input$i_training,
-                                 YearsAtCompany        = input$i_years_company,
-                                 YearsInCurrentRole    = input$i_years_role,
-                                 YearsWithCurrManager  = input$i_years_manager)
-    })
+    
+        # case_predict <- eventReactive(input$predict, {
+    #     values <- reactiveValues(Age                   = input$i_age,
+    #                              BusinessTravel        = input$i_travel,
+    #                              Department            = input$i_department,
+    #                              DistanceFromHome      = input$i_distance,
+    #                              Education             = input$i_education,
+    #                              EnvironmentSatisfaction = input$i_env_satisfaction,
+    #                              Gender                = input$i_gender,
+    #                              JobRole               = input$i_role,
+    #                              MonthlyIncome         = input$i_monthly_income,
+    #                              NumCompanyWorked      = input$i_companyworked,
+    #                              OverTime              = input$i_overtime,
+    #                              StockOptionLevel      = input$i_stock,
+    #                              TotalWorkingYears     = input$i_totalyworked,
+    #                              TrainingTimesLastYear = input$i_training,
+    #                              YearsAtCompany        = input$i_years_company,
+    #                              YearsInCurrentRole    = input$i_years_role,
+    #                              YearsWithCurrManager  = input$i_years_manager)
+    # })
     
     output$console_text <- renderText({
         #case_predict()
         #case_predict()[1]
-        text <- paste(" Age:", case_predict()$Age, "\n",
-                      "Business Travel:", case_predict()$BusinessTravel,"\n",
-                      "Department:", case_predict()$Department,"\n",
-                      "Distance From Home:", case_predict()$DistanceFromHome,"\n",
-                      "Education:", case_predict()$Education,"\n",
-                      "Enviroment Satisfaction:", case_predict()$EnvironmentSatisfaction,"\n",
-                      "Gender:", case_predict()$Gender,"\n",
-                      "Job Role:", case_predict()$JobRole,"\n",
-                      "Monthly Income:", case_predict()$MonthlyIncome,"\n",
-                      "No Company Worked:", case_predict()$NumCompanyWorked,"\n",
-                      "Overtime:", case_predict()$OverTime,"\n",
-                      "Stock Option Level:", case_predict()$StockOptionLevel,"\n",
-                      "Total Working Years:", case_predict()$TotalWorkingYears,"\n",
-                      "Training in Last Year:", case_predict()$TrainingTimesLastYear,"\n",
-                      "Years at Company:", case_predict()$YearsAtCompany,"\n",
-                      "Years in Current Role:", case_predict()$YearsInCurrentRole,"\n",
-                      "Years with Current Manager:", case_predict()$YearsWithCurrManager,"\n"
-                      )
+#        text <- paste(" Age:", v$df_pred[1,1], "\n")
+                      # "Business Travel:", case_predict()$BusinessTravel,"\n",
+                      # "Department:", case_predict()$Department,"\n",
+                      # "Distance From Home:", case_predict()$DistanceFromHome,"\n",
+                      # "Education:", case_predict()$Education,"\n",
+                      # "Enviroment Satisfaction:", case_predict()$EnvironmentSatisfaction,"\n",
+                      # "Gender:", case_predict()$Gender,"\n",
+                      # "Job Role:", case_predict()$JobRole,"\n",
+                      # "Monthly Income:", case_predict()$MonthlyIncome,"\n",
+                      # "No Company Worked:", case_predict()$NumCompanyWorked,"\n",
+                      # "Overtime:", case_predict()$OverTime,"\n",
+                      # "Stock Option Level:", case_predict()$StockOptionLevel,"\n",
+                      # "Total Working Years:", case_predict()$TotalWorkingYears,"\n",
+                      # "Training in Last Year:", case_predict()$TrainingTimesLastYear,"\n",
+                      # "Years at Company:", case_predict()$YearsAtCompany,"\n",
+                      # "Years in Current Role:", case_predict()$YearsInCurrentRole,"\n",
+                      # "Years with Current Manager:", case_predict()$YearsWithCurrManager,"\n"
+                      # )
+        pred_result_prob()
     })    
 
+    # output$PredictBox <- renderValueBox({
+    #     valueBox(
+    #         pred_result_prob(), "test", icon = icon("thumbs-up", lib = "glyphicon"),
+    #         color = "yellow"
+    #     )
+    # })
 #------------------------------------------------------------
 # Data
 #------------------------------------------------------------
