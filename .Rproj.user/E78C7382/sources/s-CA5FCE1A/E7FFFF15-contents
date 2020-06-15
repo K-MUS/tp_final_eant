@@ -111,7 +111,17 @@ box_eda_monthly <- tabPanel("Monthly Income",
 # Intro
 #------------------------------------------------------------
 tab_intro <- tabItem(tabName = "intro",
-                     h2("Intro")
+                     h2("Problem"),
+                     p("The consulting world suffers from high rotation and this represent a problem to the companies"),
+                     tags$ul(
+                       tags$li("The market price usually is higher than the average of the company employees"), 
+                       tags$li("The time that it's spent in training and onboarding of new employee"),
+                       tags$li("When several people leaves an area the others starts to wonder and why a lot of people are leaving"),
+                     ),
+                     h2("Benefits of the project"),
+                     p("Help the companies to detect possible attrition and resign from his employees and also to detect patters on which variables are determinating"),
+                     h2("Data"),
+                     p("Help the companies to detect possible attrition and resign from his employees and also to detect patters on which variables are determinating"),                     
 )
 
 #------------------------------------------------------------
@@ -135,7 +145,8 @@ tab_eda <- tabItem(tabName = "eda",
 tab_model <- tabItem(tabName = "model",
                        box(
                          title = "Parameters", width = 4, status = "primary", solidHeader = TRUE,
-                         h2("parameters")
+                         h2("parameters"),
+                         verbatimTextOutput("conf_mat_info")
                        ),
                        box(
                          title = "Results", width = 8, status = "primary", solidHeader = TRUE,
@@ -148,54 +159,55 @@ tab_model <- tabItem(tabName = "model",
 # Predict
 #------------------------------------------------------------
 tab_predict <- tabItem(tabName = "predict",
-                       box(
-                         title = "Relevant Parameters", width = 2, status = "primary", solidHeader = TRUE,
-                           #age
-                           sliderInput("i_age", "Age?", min = 14, max = 100, value = 38),                         
-                           #travel
-                           selectInput("i_travel", "Travel Frequency", 
-                                       choices = as.list(levels(train$BusinessTravel)),
-                                       # choices = list("Non-Travel" = "Non-Travel", 
-                                       #                "Rarely" = "Travel_Rarely", 
-                                       #                "Frequently" = "Travel_Frequently"), 
-                                       selected = 1),
-                           #monthlyIncome
-                           sliderInput("i_monthly_income", "Monthly Income", min = 1000, max = 25000, value = 15000),
-                           #JobRole
-                           selectInput("i_role", "Job Role", 
-                                       choices = list("Sales Executive" = "Sales Executive", 
-                                                      "Research Scientist" = "Research Scientist", 
-                                                      "Laboratory Technician" = "Laboratory Technician",
-                                                      "Manufacturing Director" = "Manufacturing Director",
-                                                      "Healthcare Representative" = "Healthcare Representative",
-                                                      "Manager" = "Manager",
-                                                      "Sales Representative" = "Sales Representative",
-                                                      "Research Director" = "Research Director",
-                                                      "Human Resources" = "Human Resource"
-                                       ), 
-                                       selected = 3),     
-                           #JobSatisfaction
-                           selectInput("i_job_satisfaction", "Job Satisfaction", 
-                                       choices = list("Low" = 1, 
-                                                      "Medium"  = 2, 
-                                                      "High" = 3,
-                                                      "Very High"   = 4), 
-                                       selected = 2),  
-                           #Overtime
-                           selectInput("i_overtime", "Overtime", 
-                                       choices = list("No" = "No", 
-                                                      "Yes"  = "Yes"), 
-                                       selected = 2),                           
-                           #StockOptionLvl
-                           sliderInput("i_stock", "Stock Option level", min = 0, max = 3, value = 1),
-                           #YearsCompany
-                           sliderInput("i_years_company", "Years at Company", min = 0, max = 40, value = 6),                                                                         
-                           #Years Current Role
-                           sliderInput("i_years_role", "Years at Current Role", min = 0, max = 40, value = 2),                                                                         
-                           #Years Same Manager
-                           sliderInput("i_years_manager", "Years with Current Manager", min = 0, max = 40, value = 2),                                                                         
-                         ),
-                       column(width = 2,                       
+                  fluidRow(
+                         box( 
+                           title = "Relevant Parameters", width = 3, status = "primary", solidHeader = TRUE,
+                             #age
+                             sliderInput("i_age", "Age?", min = 14, max = 100, value = 38),                         
+                             #travel
+                             selectInput("i_travel", "Travel Frequency", 
+                                         choices = as.list(levels(train$BusinessTravel)),
+                                         # choices = list("Non-Travel" = "Non-Travel", 
+                                         #                "Rarely" = "Travel_Rarely", 
+                                         #                "Frequently" = "Travel_Frequently"), 
+                                         selected = 1),
+                             #monthlyIncome
+                             sliderInput("i_monthly_income", "Monthly Income", min = 1000, max = 25000, value = 15000),
+                             #JobRole
+                             selectInput("i_role", "Job Role", 
+                                         choices = list("Sales Executive" = "Sales Executive", 
+                                                        "Research Scientist" = "Research Scientist", 
+                                                        "Laboratory Technician" = "Laboratory Technician",
+                                                        "Manufacturing Director" = "Manufacturing Director",
+                                                        "Healthcare Representative" = "Healthcare Representative",
+                                                        "Manager" = "Manager",
+                                                        "Sales Representative" = "Sales Representative",
+                                                        "Research Director" = "Research Director",
+                                                        "Human Resources" = "Human Resources"
+                                         ), 
+                                         selected = 3),     
+                             #JobSatisfaction
+                             selectInput("i_job_satisfaction", "Job Satisfaction", 
+                                         choices = list("Low" = 1, 
+                                                        "Medium"  = 2, 
+                                                        "High" = 3,
+                                                        "Very High"   = 4), 
+                                         selected = 2),  
+                             #Overtime
+                             selectInput("i_overtime", "Overtime", 
+                                         choices = list("No" = "No", 
+                                                        "Yes"  = "Yes"), 
+                                         selected = 2),                           
+                             #StockOptionLvl
+                             sliderInput("i_stock", "Stock Option level", min = 0, max = 3, value = 1),
+                             #YearsCompany
+                             sliderInput("i_years_company", "Years at Company", min = 0, max = 40, value = 6),                                                                         
+                             #Years Current Role
+                             sliderInput("i_years_role", "Years at Current Role", min = 0, max = 40, value = 2),                                                                         
+                             #Years Same Manager
+                             sliderInput("i_years_manager", "Years with Current Manager", min = 0, max = 40, value = 2),                                                                         
+                           ),
+                       column(width = 3,                       
                          box(
                            title = "Less Relevant Parameters", width = NULL, status = "primary", solidHeader = TRUE,
                            #department
@@ -241,11 +253,15 @@ tab_predict <- tabItem(tabName = "predict",
                            sliderInput("i_training", "Training Times Last Year", min = 0, max = 10, value = 2),                                                
                          ),
                          box(width = NULL,align="center",
-                           actionButton("predict", label = "Predict"),
+                             actionButton("predict", label = "Predict"),                           
                          )
                        ),
-                       verbatimTextOutput("console_text"),
-                       valueBoxOutput("PredictBox")
+                       column(width = 3,
+                         verbatimTextOutput("case")
+                         # verbatimTextOutput("model")
+                       ),
+                       valueBoxOutput("PredictBox", width = 3),                              
+                  )
                        # box(
                        #   title = "Result", width = 8, status = "primary", solidHeader = TRUE,
                        #   h2("Results")

@@ -1,0 +1,32 @@
+{
+    "id": "41CBF5C9",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1592176311050.0,
+    "source_on_save": false,
+    "relative_order": 8,
+    "properties": {
+        "expression": "pred",
+        "caption": "pred",
+        "totalObservations": "1",
+        "displayedObservations": "1",
+        "variables": "2",
+        "cacheKey": "2A0A251D",
+        "object": "pred",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=pred&cache_key=2A0A251D&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 3163594923576,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592176311050,
+    "read_only": false,
+    "read_only_alternatives": []
+}

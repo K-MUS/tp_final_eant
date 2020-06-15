@@ -12,14 +12,14 @@
     "properties": {
         "expression": "train",
         "caption": "train",
-        "totalObservations": 1177,
-        "displayedObservations": 1177,
-        "variables": 19,
-        "cacheKey": "0AC75373",
+        "totalObservations": "1177",
+        "displayedObservations": "1177",
+        "variables": "19",
+        "cacheKey": "BC7B4C02",
         "object": "train",
         "environment": "",
-        "contentUrl": "grid_resource/gridviewer.html?env=&obj=train&cache_key=0AC75373&max_cols=50",
-        "preview": 0
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=train&cache_key=BC7B4C02&max_cols=50",
+        "preview": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 1591991003,

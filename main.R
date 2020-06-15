@@ -57,17 +57,19 @@ trainIndex <- createDataPartition(df$Attrition, p=0.8,
 train <- df[trainIndex,]
 test <- df[-trainIndex,]
 
-case1 <- test[1,]
+case1 <- test[1,]       
 str(train)
 str(train$BusinessTravel)
 levels(train$BusinessTravel)
 
-model <- rpart(Attrition ~ ., data=train)
+# model <- rpart(Attrition ~ ., data=train)
+model <- rpart(Attrition ~ ., data=train,control=rpart.control(minsplit=10,cp=0.001))
 model
 plot(model, uniform=TRUE, branch=0.6, margin=0.05)
 text(model, all=TRUE, use.n=TRUE)
-summary(model) 
+model
 pred <- predict(model, newdata = test[5,], type = "class")
+summary(pred)
 pred
 
 # Complicated DecisionTree, Is there a way to determine variable importance?
@@ -77,7 +79,17 @@ var_imp <- var_imp[, c(2, 1)]
 var_imp$importance <- round(var_imp$model.variable.importance, 2)
 var_imp$model.variable.importance <- NULL
 
-unique(df$Department)
+conf_mat = predict(model, newdata = test, type = "class") 
+conf_mat_info <- confusionMatrix(conf_mat,test$Attrition)
+conf_mat_info
+# install.packages("ROCR")
+# library("ROCR")
+# predict = predict(model, newdata = test, type = "prob")[,2] 
+# prediction = prediction(predict, test$Attrition) 
+# plot(performance(prediction, "tpr", "fpr"))
+# abline(0, 1, lty = 2)
+
+
 
 colorCount <- length(unique(var_imp$features))
 feature_importance <- var_imp 
