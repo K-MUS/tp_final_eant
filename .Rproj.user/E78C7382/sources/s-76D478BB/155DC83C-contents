@@ -1,0 +1,216 @@
+---
+title: "Ejercicios Clase 6 - Metricas modelos"
+output:
+  html_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+Levantamos el archivo german_credit.csv
+
+```{r}
+GermanCredit <- read.csv('german_credit.csv')
+```
+
+Convierto a factor las columnas correspondientes
+
+```{r}
+#paso a factor las columnas categoricas
+FactorColumns <- c(1,2,4,5,7,8,10,11,13,15,16,18,20,21)
+for (FactorColumn in FactorColumns) {
+  GermanCredit[, FactorColumn] <- as.factor(GermanCredit[, FactorColumn])
+}
+```
+
+Separo en training y testing respetando la proporci??n de clase
+
+```{r}
+set.seed(1234)
+
+TrainingProp <- 0.70
+PositiveClassIxs <- which(GermanCredit$Creditability==1)
+NegativeClassIxs <- which(GermanCredit$Creditability==0)
+
+PropPositives <- length(PositiveClassIxs) / nrow(GermanCredit)
+
+PositiveClassIxs.sample <- sample(PositiveClassIxs, floor(TrainingProp * nrow(GermanCredit) * PropPositives))
+
+NegativeClassIxs.sample <- sample(NegativeClassIxs, floor(TrainingProp * nrow(GermanCredit) * (1 - PropPositives)))
+
+TrainingIndex <- c(PositiveClassIxs.sample, NegativeClassIxs.sample)
+TestingIndex <- seq_len(nrow(GermanCredit))[-TrainingIndex]
+#!(seq_len(nrow(GermanCredit)) %in% TrainingIndex)
+GermanCredit.training <- GermanCredit[TrainingIndex, ]
+GermanCredit.testing <- GermanCredit[TestingIndex, ]
+```
+
+Correr un ??rbol gen??rico
+
+```{r}
+library(rpart)
+library(rpart.plot)
+fit <- rpart(Creditability ~ ., data=GermanCredit.training)
+rpart.plot(fit, extra=0, type=2)
+```
+
+En un nuevo dataframe separo las predicciones y clase original.
+```{r}
+GermanCreditTestingPred <- data.frame(predict(fit, type='prob', GermanCredit.testing)[, 2])
+colnames(GermanCreditTestingPred) <- c("probabilidad")
+GermanCreditTestingPred$Creditability <- GermanCredit.testing$Creditability
+```
+
+Armo una funci??n para obtener la clase incrementando el umbral de a 0.1
+```{r}
+predClass <- function(v, k) {
+  ifelse(v >= k, 1, 0)
+}
+```
+
+```{r}
+especificidad <- c()
+sensibilidad <- c()
+for (umbral in seq(0, 1, 0.1)) {
+  Predicciones <- predClass(GermanCreditTestingPred$probabilidad, umbral)  
+  GermanCreditTestingPred$Predicciones <- Predicciones
+  VP <- nrow(subset(GermanCreditTestingPred, Predicciones == 1 & Creditability == 1))
+  FP <- nrow(subset(GermanCreditTestingPred, Predicciones == 1 & Creditability == 0))
+  FN <- nrow(subset(GermanCreditTestingPred, Predicciones == 0 & Creditability == 1))
+  VN <- nrow(subset(GermanCreditTestingPred, Predicciones == 0 & Creditability == 0))
+  sensibilidad <- c(sensibilidad, VP / (VP + FN))
+  especificidad <- c(especificidad, VN / (VN + FP))
+}
+```
+
+```{r}
+library(ggplot2)
+p <- qplot(x=seq(0, 1, 0.1), y=especificidad, 
+           xlab = "Umbral",
+           ylab = "Especificidad")
+p + geom_line()
+```
+
+```{r}
+p <- qplot(x=seq(0, 1, 0.1), y=sensibilidad, 
+           xlab = "Umbral",
+           ylab = "Sensibilidad")
+p + geom_line()
+```
+```{r}
+library(ROCR)
+perf <- performance(prediction(GermanCreditTestingPred$probabilidad, GermanCreditTestingPred$Creditability), 'tpr', 'fpr')
+cutoffs <- data.frame(cut=perf@alpha.values[[1]], fpr=perf@x.values[[1]], 
+                      tpr=perf@y.values[[1]])
+plot(perf)
+```
+
+Valor de Area Bajo la Curva ROC
+
+```{r}
+auc_0 <- prediction(GermanCreditTestingPred$probabilidad, GermanCreditTestingPred$Creditability)
+auc <- performance(auc_0,"auc")
+auc@y.values[[1]]
+```
+
+Para calcular el lift utilizamos el paquete lift
+
+```{r}
+#install.packages('lift')
+library(lift)
+plotLift(GermanCreditTestingPred$probabilidad, GermanCreditTestingPred$Creditability)
+```
+
+
+
+Para calcular KS primero vamos a generar los percentiles de probabilidad agrupada y luego se calcula la diferencia maxima
+
+```{r}
+#install.packages('reshape2')
+library(reshape2)
+
+
+test<-GermanCreditTestingPred[order(GermanCreditTestingPred$probabilidad),]
+test$bin<-floor(10 * seq.int(0, length(GermanCreditTestingPred$probabilidad) - 1) / length(GermanCreditTestingPred$probabilidad))
+
+
+test2<-dcast(test, bin ~ Creditability, fun.aggregate = length)
+test2$agg_0<- cumsum(test2$`0`)
+test2$agg_1<- cumsum(test2$`1`)
+test2$agg_0prop <- test2$agg_0 /  max(test2$agg_0)
+test2$agg_1prop <- test2$agg_1 /  max(test2$agg_1)
+
+print (max(abs(test2$agg_0prop-test2$agg_1prop)))
+```
+
+Correr una regresion logistica con el mismo dataset y comparar los modelos
+
+```{r}
+
+LogisticModel <- glm(Creditability ~ Account.Balance + Payment.Status.of.Previous.Credit + Purpose + 
+                     Length.of.current.employment + 
+                     Sex...Marital.Status, family=binomial, 
+                     data = GermanCredit.training)
+
+```
+
+
+
+```{r}
+library(ROCR)
+GermanCreditTestingPred$probabilidad_log <- predict(LogisticModel, GermanCredit.testing, type='response')
+perf_log <- performance(prediction(GermanCreditTestingPred$probabilidad_log, GermanCreditTestingPred$Creditability), 'tpr', 'fpr')
+plot(perf_log)
+```
+
+```{r}
+auc_0 <- prediction(GermanCreditTestingPred$probabilidad_log, GermanCreditTestingPred$Creditability)
+auc <- performance(auc_0,"auc")
+auc@y.values[[1]]
+```
+Hago un ensamble de regresi??n log??stica y el ??rbol de decisi??n.
+
+```{r}
+GermanCreditTestingPred$ensamble <- rowMeans(GermanCreditTestingPred[,c("probabilidad", "probabilidad_log")])
+head(GermanCreditTestingPred)
+auc_0 <- prediction(GermanCreditTestingPred$ensamble, GermanCreditTestingPred$Creditability)
+auc <- performance(auc_0,"auc")
+auc@y.values[[1]]
+
+
+perf_ens <- performance(prediction(GermanCreditTestingPred$ensamble, GermanCreditTestingPred$Creditability), 'tpr', 'fpr')
+plot(perf_log)
+
+
+```
+
+```{r}
+#install.packages('lift')
+library(lift)
+plotLift(GermanCreditTestingPred$probabilidad_log, GermanCreditTestingPred$Creditability)
+```
+```{r}
+test<-GermanCreditTestingPred[order(GermanCreditTestingPred$probabilidad_log),]
+test$bin<-floor(10 * seq.int(0, length(GermanCreditTestingPred$probabilidad_log) - 1) / length(GermanCreditTestingPred$probabilidad_log))
+
+
+test2<-dcast(test, bin ~ Creditability, fun.aggregate = length)
+test2$agg_0<- cumsum(test2$`0`)
+test2$agg_1<- cumsum(test2$`1`)
+test2$agg_0prop <- test2$agg_0 /  max(test2$agg_0)
+test2$agg_1prop <- test2$agg_1 /  max(test2$agg_1)
+
+print (max(abs(test2$agg_0prop-test2$agg_1prop)))
+```
+
+
+
+Graficando las dos Curvas Roc
+
+```{r}
+plot(perf, col = "blue")
+plot(perf_log, add = TRUE, col = "red")
+plot(perf_ens, add = TRUE, col = "green")
+legend(0.4, 0.4, legend = c("??rbol de decisi??n", "Regresi??n Log??stica", "Ensamble"),
+       col=c("blue", "red", "green"),box.lty=0, lty=1:2)
+```
+

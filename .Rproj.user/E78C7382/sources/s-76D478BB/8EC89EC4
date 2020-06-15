@@ -1,0 +1,25 @@
+{
+    "id": "8EC89EC4",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1592236773206.0,
+    "source_on_save": false,
+    "relative_order": 14,
+    "properties": {
+        "id": "315e9db2890a4361943ab7055a05bf81",
+        "name": "tab_eda",
+        "title": "tab_eda"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 2471829037320,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592236773206,
+    "read_only": false,
+    "read_only_alternatives": []
+}

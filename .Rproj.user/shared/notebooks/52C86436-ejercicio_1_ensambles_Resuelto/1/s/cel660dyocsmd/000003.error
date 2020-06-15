@@ -1,0 +1,1 @@
+{"frames":[{"func":"library(ROCR)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0},{"func":"stop(txt, domain = NA)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error in library(ROCR) : there is no package called ‘ROCR’\n"}
