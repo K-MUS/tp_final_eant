@@ -59,36 +59,36 @@ train <- df[trainIndex,]
 test <- df[-trainIndex,]
 
 #model Decision tree
-model <- rpart(Attrition ~ ., data=train)
-model <- rpart(Attrition ~ ., data=train,control=rpart.control(minsplit=10,cp=0.001))
-model
-plot(model, uniform=TRUE, branch=0.6, margin=0.05)
-text(model, all=TRUE, use.n=TRUE)
+model_dt <- rpart(Attrition ~ ., data=train)
+model_dt <- rpart(Attrition ~ ., data=train,control=rpart.control(minsplit=10,cp=0.001))
+model_dt
+plot(model_dt, uniform=TRUE, branch=0.6, margin=0.05)
+text(model_dt, all=TRUE, use.n=TRUE)
 
-rpart.plot(model, extra=0, type=2)
+rpart.plot(model_dt, extra=0, type=2)
 
-conf_mat = predict(model, newdata = test, type = "class") 
+conf_mat = predict(model_dt, newdata = test, type = "class") 
 conf_mat_info <- confusionMatrix(conf_mat,test$Attrition)
 conf_mat_info
 
 #model randomForest
-model <- randomForest::randomForest(Attrition ~ .,data = train)
-model <- randomForest::randomForest(Attrition ~ .,data = train,ntree=100, mtry=2)
-model
-randomForest::varImpPlot(model)
-model
+model_rf <- randomForest::randomForest(Attrition ~ .,data = train)
+model_rf <- randomForest::randomForest(Attrition ~ .,data = train,ntree=100, mtry=2)
+model_rf
+randomForest::varImpPlot(model_rf)
+model_rf
 
 #party
-model <- party::ctree(Attrition ~ .,data = train)
-plot(model, type="simple")
-model
+model_tp <- party::ctree(Attrition ~ .,data = train)
+plot(model_tp, type="simple")
+model_tp
 
-conf_mat = predict(model, newdata = test, type = "response") 
+conf_mat = predict(model_tp, newdata = test, type = "response") 
 conf_mat_info <- confusionMatrix(conf_mat,test$Attrition)
 conf_mat_info
 
 #ROC
-predict = predict(model, newdata = test, type = "prob")[,1]
+predict = predict(model_dt, newdata = test, type = "prob")[,1]
 par(pty="s")
 roc(response = test$Attrition, predictor = predict,plot=TRUE, legacy.axes = TRUE, percent = TRUE, xlab= "False Positive Perc.", ylab= "True Positive Perc.",
     col="#377EB8",lwd=4, print.auc=TRUE)
@@ -111,14 +111,6 @@ feature_importance <- var_imp
     geom_label(aes(label=paste0(importance, "%")), colour = "white", fontface = "italic", hjust=0.6) + 
     theme_minimal() +
     theme(legend.position="none")
-  # theme(legend.position="none", strip.background = element_blank(), strip.text.x = element_blank(),
-  #         plot.title=element_text(hjust=0.5, color="white"), plot.subtitle=element_text(color="white"), plot.background=element_rect(fill="#0D7680"),
-  #         axis.text.x=element_text(colour="white"), axis.text.y=element_text(colour="white"),
-  #         axis.title=element_text(colour="white"),
-  #         legend.background = element_rect(fill="#FFF9F5",
-  #                                          size=0.5, linetype="solid",
-  #                                          colour ="black"))
-  
 
 shinyApp(
   ui = UI,

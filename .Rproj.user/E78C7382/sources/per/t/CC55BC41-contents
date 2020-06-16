@@ -4,11 +4,13 @@
 source('tabs.R')
 sidebar <- dashboardSidebar(
     sidebarMenu(
-        menuItem("Intro", tabName = "intro"),
-        menuItem("EDA", tabName = "eda"),
-        menuItem("Model", tabName = "model"),
-        menuItem("Predict", tabName = "predict"),
-        menuItem("DataSet", tabName = "datos")
+        menuItem("Intro", tabName = "intro",icon=icon("file-alt")),
+        menuItem("EDA", tabName = "eda",icon = icon("chart-bar")),
+        menuItem("Model", tabName = "model",icon = icon("th-large")),
+          menuSubItem("Decision Tree", tabName = "model_dt",icon = icon("tree-deciduous", lib = "glyphicon")),
+          menuSubItem("Random Forest", tabName = "model_rf",icon = icon("tree")),
+        menuItem("Predict", tabName = "predict",icon = icon('dashboard')),
+        menuItem("DataSet", tabName = "datos",icon=icon("database"))
     )
 )
 
