@@ -1,0 +1,32 @@
+{
+    "id": "11892E3D",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1592339198620.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "predict",
+        "caption": "predict",
+        "totalObservations": 293,
+        "displayedObservations": 293,
+        "variables": 2,
+        "cacheKey": "CA9C6137",
+        "object": "predict",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=predict&cache_key=CA9C6137&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 6157667972546457443,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592339198620,
+    "read_only": false,
+    "read_only_alternatives": []
+}

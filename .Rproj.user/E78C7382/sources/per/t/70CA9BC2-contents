@@ -67,9 +67,9 @@ text(model_dt, all=TRUE, use.n=TRUE)
 
 rpart.plot(model_dt, extra=0, type=2)
 
-conf_mat = predict(model_dt, newdata = test, type = "class") 
-conf_mat_info <- confusionMatrix(conf_mat,test$Attrition)
-conf_mat_info
+conf_mat_dt = predict(model_dt, newdata = test, type = "class") 
+conf_mat_info_dt <- confusionMatrix(conf_mat_dt ,test$Attrition)
+conf_mat_info_dt
 
 #model randomForest
 model_rf <- randomForest::randomForest(Attrition ~ .,data = train)
@@ -78,21 +78,31 @@ model_rf
 randomForest::varImpPlot(model_rf)
 model_rf
 
+conf_mat_rf = predict(model_rf, newdata = test, type = "class") 
+conf_mat_info_rf <- confusionMatrix(conf_mat_rf ,test$Attrition)
+conf_mat_info_rf
+
+
 #party
 model_tp <- party::ctree(Attrition ~ .,data = train)
 plot(model_tp, type="simple")
 model_tp
 
-conf_mat = predict(model_tp, newdata = test, type = "response") 
-conf_mat_info <- confusionMatrix(conf_mat,test$Attrition)
-conf_mat_info
+conf_mat_tp = predict(model_tp, newdata = test, type = "response") 
+conf_mat_info_tp <- confusionMatrix(conf_mat_tp ,test$Attrition)
+conf_mat_info_tp
 
 #ROC
-predict = predict(model_dt, newdata = test, type = "prob")[,1]
+predict_dt = predict(model_dt, newdata = test, type = "prob")[,1]
 par(pty="s")
-roc(response = test$Attrition, predictor = predict,plot=TRUE, legacy.axes = TRUE, percent = TRUE, xlab= "False Positive Perc.", ylab= "True Positive Perc.",
+roc_dt <-  roc(response = test$Attrition, predictor = predict_dt,plot=TRUE, legacy.axes = TRUE, percent = TRUE, xlab= "False Positive Perc.", ylab= "True Positive Perc.",
     col="#377EB8",lwd=4, print.auc=TRUE)
 
+#ROC_rf
+predict_rf = predict(model_rf, newdata = test, type = "prob")[,1]
+par(pty="s")
+roc(response = test$Attrition, predictor = predict_rf,plot=TRUE, legacy.axes = TRUE, percent = TRUE, xlab= "False Positive Perc.", ylab= "True Positive Perc.",
+    col="#377EB8",lwd=4, print.auc=TRUE)
 
 # Complicated DecisionTree, Is there a way to determine variable importance?
 var_imp <- data.frame(model$variable.importance)

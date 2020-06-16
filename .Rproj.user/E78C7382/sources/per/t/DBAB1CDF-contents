@@ -239,6 +239,34 @@ SERVER <- shinyServer(function(input, output) {
     output$conf_mat_info <- renderPrint({
         confusionMatrix(conf_mat,test$Attrition)
     })
+    
+    output$roc_dt <- renderPlot({
+        roc(response = test$Attrition, predictor = predict_dt,plot=TRUE, legacy.axes = TRUE, percent = TRUE, xlab= "False Positive Perc.", ylab= "True Positive Perc.",
+            col="#377EB8",lwd=4, print.auc=TRUE)
+    })
+    output$conf_mat_info_dt <- renderPrint({
+        confusionMatrix(conf_mat_dt,test$Attrition)
+    })
+    output$imp_var_dt <- renderPlot({
+        ggplot(feature_importance, aes(x=reorder(features, importance), y=importance, fill=features)) + 
+            geom_bar(stat='identity') + 
+            coord_flip() + 
+            geom_label(aes(label=paste0(importance, "%")), colour = "white", fontface = "italic", hjust=0.6) + 
+            theme_minimal() +
+            theme(legend.position="none")
+    })
+        
+    output$roc_rf <- renderPlot({
+        roc(response = test$Attrition, predictor = predict_rf,plot=TRUE, legacy.axes = TRUE, percent = TRUE, xlab= "False Positive Perc.", ylab= "True Positive Perc.",
+            col="#377EB8",lwd=4, print.auc=TRUE)
+    })    
+    output$conf_mat_info_rf <- renderPrint({
+        confusionMatrix(conf_mat_rf,test$Attrition)
+    })
+    output$imp_var_rf <- renderPlot({
+        randomForest::varImpPlot(model_rf)
+    })
+    
 #------------------------------------------------------------
 # Predict
 #------------------------------------------------------------

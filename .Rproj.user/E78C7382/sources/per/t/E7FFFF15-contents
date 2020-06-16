@@ -152,9 +152,41 @@ tab_model <- tabItem(tabName = "model",
                          title = "Results", width = 8, status = "primary", solidHeader = TRUE,
                          h2("Result")
                        )
-                       
 )
-
+#------------------------------------------------------------
+# Model - Decision Tree
+#------------------------------------------------------------
+tab_model_dt <- tabItem(tabName = "model_dt",
+                      box(
+                        title = "ROC", width = 4, status = "primary", solidHeader = TRUE,
+                        plotOutput("roc_dt")#, height = "320px")
+                      ),
+                      box(
+                       title = "Confusion Matrix & Stadistics", width = 4, status = "primary", solidHeader = TRUE,
+                       verbatimTextOutput("conf_mat_info_dt")
+                      ),
+                      box(
+                        title = "Importance Variables", width = 4, status = "primary", solidHeader = TRUE,
+                        plotOutput("imp_var_dt")#, height = "320px")
+                      )                      
+)
+#------------------------------------------------------------
+# Model - random forest
+#------------------------------------------------------------
+tab_model_rf <- tabItem(tabName = "model_rf",
+                      box(
+                        title = "ROC", width = 4, status = "primary", solidHeader = TRUE,
+                        plotOutput("roc_rf")#, height = "320px")
+                      ),
+                      box(
+                        title = "Confusion Matrix & Stadistics", width = 4, status = "primary", solidHeader = TRUE,
+                        verbatimTextOutput("conf_mat_info_rf")
+                      ),
+                      box(
+                        title = "Importance Variables", width = 4, status = "primary", solidHeader = TRUE,
+                        plotOutput("imp_var_rf")#, height = "320px")
+                      )                      
+)
 #------------------------------------------------------------
 # Predict
 #------------------------------------------------------------

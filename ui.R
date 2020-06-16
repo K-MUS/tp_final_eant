@@ -6,9 +6,9 @@ sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Intro", tabName = "intro",icon=icon("file-alt")),
         menuItem("EDA", tabName = "eda",icon = icon("chart-bar")),
-        menuItem("Model", tabName = "model",icon = icon("th-large")),
-          menuSubItem("Decision Tree", tabName = "model_dt",icon = icon("tree-deciduous", lib = "glyphicon")),
-          menuSubItem("Random Forest", tabName = "model_rf",icon = icon("tree")),
+        menuItem("Model", tabName = "model",icon = icon("tree")),
+          menuSubItem("Decision Tree", tabName = "model_dt",icon = icon("none")),
+          menuSubItem("Random Forest", tabName = "model_rf",icon = icon("none")),
         menuItem("Predict", tabName = "predict",icon = icon('dashboard')),
         menuItem("DataSet", tabName = "datos",icon=icon("database"))
     )
@@ -36,6 +36,8 @@ body <- dashboardBody(
         tab_intro,
         tab_eda,
         tab_model,
+        tab_model_dt,
+        tab_model_rf,
         tab_predict,
         tab_datos
     )
